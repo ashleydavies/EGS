@@ -1,0 +1,1 @@
+The reason for it is so that I can draw things without antialiasing. Borders and stuff look ugly with antialiasing and it ruins lots of my math stuffz
