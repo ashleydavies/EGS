@@ -1,3 +1,5 @@
+**Forwarning: This library was written 4 years ago, and some of the code is a bit hacky in places. Additionally, it hasn't been updated since (Only republished on my new GitHub account) so I would be surprised if it still worked in modern versions of Love2D.**
+
 This is a GUI library for Love2D. It's very customizable and has literally tens of features.
 
 It has a full-fledged event system (Similar to the one found at http://roblox.com) (Object.Event:connect(function))
