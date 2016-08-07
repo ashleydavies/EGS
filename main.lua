@@ -1,5 +1,5 @@
-require("Class.lua")
-require("GUIElements\/GUIMain.lua")
+require("Class")
+require("GUIElements/GUIMain")
 
 --------------NOTE
 
@@ -15,7 +15,7 @@ function giveTheme(element)
 end
 
 function love.load()
-	love.graphics.setFont(10)
+	love.graphics.setFont(love.graphics.setNewFont(10))
 	love.graphics.setBackgroundColor(255,255,255)
 	
 	GUIElement:new("GE1")
