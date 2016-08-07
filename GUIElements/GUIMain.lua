@@ -1,22 +1,22 @@
-require("GUIElements\/GUIClassDecleration.lua")
+require("GUIElements/GUIClassDecleration")
 
-mouseLeft = love.mouse.isDown("l")
-mouseRight = love.mouse.isDown("r")
-mouseLeftCache = love.mouse.isDown("l")
-mouseRightCache = love.mouse.isDown("r")
+mouseLeft = love.mouse.isDown(1)
+mouseRight = love.mouse.isDown(2)
+mouseLeftCache = love.mouse.isDown(1)
+mouseRightCache = love.mouse.isDown(2)
 mousePosition = {love.mouse.getX(), love.mouse.getY()}
 mousePositionCache = {love.mouse.getX(), love.mouse.getY()}
 
 GUIGraphics = 	{
-			["spotImg"] = love.graphics.newImage("GUIUI\/WhiteSpot.png"),
-			["Check"] = love.graphics.newImage("GUIUI\/Check.png"),
+			["spotImg"] = love.graphics.newImage("GUIUI/WhiteSpot.png"),
+			["Check"] = love.graphics.newImage("GUIUI/Check.png"),
 				}
 
 GUIs = {}
 
 function GUIUpdate(Time)
-	mouseLeft = love.mouse.isDown("l")
-	mouseRight = love.mouse.isDown("r")
+	mouseLeft = love.mouse.isDown(1)
+	mouseRight = love.mouse.isDown(2)
 	mousePosition = {love.mouse.getX(), love.mouse.getY()}
 	for _,v in pairs(GUIs) do
 		v:gUpdate(Time)	--Core updating function
@@ -24,8 +24,8 @@ function GUIUpdate(Time)
 			v:update(Time)
 		end
 	end
-	mouseLeftCache = love.mouse.isDown("l")
-	mouseRightCache = love.mouse.isDown("r")
+	mouseLeftCache = love.mouse.isDown(1)
+	mouseRightCache = love.mouse.isDown(2)
 	mousePositionCache = {love.mouse.getX(), love.mouse.getY()}
 end
 
@@ -78,6 +78,6 @@ function drawShading(bX, bY, bW, bH, transparency)
 	love.graphics.draw(GUIGraphics["spotImg"], bX, bY, 0, bW, bH)
 end
 
-require("GUIElements\/CheckBox.lua")
-require("GUIElements\/TextButton.lua")
-require("GUIElements\/Slider.lua")
+require("GUIElements/CheckBox")
+require("GUIElements/TextButton")
+require("GUIElements/Slider")
