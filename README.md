@@ -1,6 +1,6 @@
 #Registering Interest
 
-I am considering coming back to this project and re-writing and expanding upon it, if there is a desire for this.
+I am considering coming back to this project and re-writing and expanding upon it, if there is a desire for this. In this event, I would likely migrate it to a proper class system like https://github.com/kikito/middleclass, instead of the one I rolled, which is awful.
 
 If you decide to use this code, I implore you to let me know at ashley@daviesl.uk so I can gauge whether or not there is any interest.
 
