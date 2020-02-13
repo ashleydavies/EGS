@@ -123,7 +123,7 @@ Class("Slider")(
 				end
 			end
 		end,
-		["gUpdate"] = function(se, Time)
+		["gUpdate"] = function(se, time)
 			--Cache values for events
 			local cacheEventStuff = {
 				["bld"] = se.mouseLDown,
@@ -148,12 +148,12 @@ Class("Slider")(
 			 then
 				se.mouseHovering = true
 				if se.toolTipSeconds > 0 then
-					se.toolTipSeconds = se.toolTipSeconds - Time
+					se.toolTipSeconds = se.toolTipSeconds - time
 				end
 				if mouseLeft then
 					se.mouseLDown = true
 					if se.mouseLClickedSeconds > 0 then
-						se.mouseLClickedSeconds = se.mouseLClickedSeconds - Time
+						se.mouseLClickedSeconds = se.mouseLClickedSeconds - time
 					end
 				else
 					se.mouseLDown = false
@@ -162,7 +162,7 @@ Class("Slider")(
 				if mouseRight then
 					se.mouseRDown = true
 					if se.mouseRClickedSeconds > 0 then
-						se.mouseRClickedSeconds = se.mouseRClickedSeconds - Time
+						se.mouseRClickedSeconds = se.mouseRClickedSeconds - time
 					end
 				else
 					se.mouseRDown = false
