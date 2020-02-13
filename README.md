@@ -26,7 +26,7 @@ It's really easy to use! Here's a basic example:
 
 ```lua
 require("Class.lua")
-require("GUIElements\/GUIMain.lua")
+require("GUIElements/GUIMain.lua")
 	
 function love.load()
 	Button:new("ClickButton")
