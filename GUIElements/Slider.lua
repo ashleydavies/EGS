@@ -123,94 +123,83 @@ Class("Slider")(
 				end
 			end
 		end,
-		["gUpdate"] = function(se, time)
+		["gUpdate"] = function(self, dt)
 			--Cache values for events
-			local cacheEventStuff = {
-				["bld"] = se.mouseLDown,
-				["brd"] = se.mouseRDown,
-				["mlcs"] = se.mouseLClickedSeconds,
-				["mrcs"] = se.mouseRClickedSeconds,
-				["mh"] = se.mouseHovering,
-				["tts"] = se.toolTipSeconds
+			local previously = {
+				["bld"] = self.mouseLDown,
+				["brd"] = self.mouseRDown,
+				["mh"] = self.mouseHovering,
+				["tts"] = self.toolTipSeconds
 			}
 
-			local slotDistance = se.size[1] / se.slots
+			local slotDistance = self.size[1] / self.slots
 			local sliderPosition = {
-				se.position[1] + slotDistance * se.slideRectanglePosition - slotDistance / 2 - se.slideRectangleSize[1] / 2,
-				se.position[2] + se.size[2] / 2 - se.slideRectangleSize[2] / 2
+				self.position[1] + slotDistance * self.slideRectanglePosition - slotDistance / 2 - self.slideRectangleSize[1] / 2,
+				self.position[2] + self.size[2] / 2 - self.slideRectangleSize[2] / 2
 			}
 
-			local elseWasExecuted = false
-			if
+			local mouseWithinComponent =
 				love.mouse.getX() > sliderPosition[1] and love.mouse.getY() > sliderPosition[2] and
-					love.mouse.getX() < sliderPosition[1] + se.slideRectangleSize[1] and
-					love.mouse.getY() < sliderPosition[2] + se.slideRectangleSize[2]
-			 then
-				se.mouseHovering = true
-				if se.toolTipSeconds > 0 then
-					se.toolTipSeconds = se.toolTipSeconds - time
+				love.mouse.getX() < sliderPosition[1] + self.slideRectangleSize[1] and
+				love.mouse.getY() < sliderPosition[2] + self.slideRectangleSize[2]
+
+			if mouseWithinComponent then
+				self.mouseHovering = true
+				if self.toolTipSeconds > 0 then
+					self.toolTipSeconds = self.toolTipSeconds - dt
 				end
 				if mouseLeft then
-					se.mouseLDown = true
-					if se.mouseLClickedSeconds > 0 then
-						se.mouseLClickedSeconds = se.mouseLClickedSeconds - time
+					self.mouseLDown = true
+					if not mouseLeftCache then
+						self.mouseLDownWithinThisComponent = true
 					end
 				else
-					se.mouseLDown = false
-					se.mouseLClickedSeconds = se.mouseLClickedSeconds2
+					self.mouseLDown = false
 				end
 				if mouseRight then
-					se.mouseRDown = true
-					if se.mouseRClickedSeconds > 0 then
-						se.mouseRClickedSeconds = se.mouseRClickedSeconds - time
+					self.mouseRDown = true
+					if not mouseRightCache then
+						self.mouseRDownWithinThisComponent = true
 					end
 				else
-					se.mouseRDown = false
-					se.mouseRClickedSeconds = se.mouseRClickedSeconds2
+					self.mouseRDown = false
 				end
 			else
-				se.mouseHovering = false
+				self.mouseHovering = false
 				if not mouseLeft then
-					se.mouseLDown = false
+					self.mouseLDown = false
 				end
-				se.mouseRDown = false
-				elseWasExecuted = true --This is to stop mlDown and mrDown firing event callbacks.
-				se.toolTipSeconds = se.toolTipSeconds2
-				se.mouseLClickedSeconds = se.mouseLClickedSeconds2
-				se.mouseRClickedSeconds = se.mouseRClickedSeconds2
+				self.mouseRDown = false
+				self.toolTipSeconds = self.toolTipSeconds2
 			end
 
 			--Fire necessary events.
-			if not cacheEventStuff["bld"] and se.mouseLDown and not elseWasExecuted then
-				se.mouseButtonLDown:run(unpack(mousePosition))
+			if not previously["bld"] and self.mouseLDown and not mouseLeftCache then
+				self.mouseButtonLDown:run(unpack(mousePosition))
 			end
-			if not cacheEventStuff["brd"] and se.mouseRDown and not elseWasExecuted then
-				se.mouseButtonRDown:run(unpack(mousePosition))
+			if not previously["brd"] and self.mouseRDown and not mouseRightCache then
+				self.mouseButtonRDown:run(unpack(mousePosition))
 			end
-			if cacheEventStuff["bld"] and not se.mouseLDown and not elseWasExecuted then
-				se.mouseButtonLUp:run(unpack(mousePosition))
+			if previously["bld"] and not self.mouseLDown then
+				self.mouseButtonLUp:run(unpack(mousePosition))
 			end
-			if cacheEventStuff["brd"] and not se.mouseRDown and not elseWasExecuted then
-				se.mouseButtonRUp:run(unpack(mousePosition))
+			if previously["brd"] and not self.mouseRDown then
+				self.mouseButtonRUp:run(unpack(mousePosition))
 			end
-			 --Old broken click code. Need to fix this. Shouldn't be too hard.
-			--[[
-		if se.mouseLClickedSeconds > 0 and cacheEventStuff["bld"] and not se.mouseLDown and not elseWasExecuted then
-			se.mouseButtonLClick:run(unpack(mousePosition))
-		end
-		if se.mouseRClickedSeconds > 0 and cacheEventStuff["bld"] and not se.mouseLDown and not elseWasExecuted then
-			se.mouseButtonRClick:run(unpack(mousePosition))
-		end
-		]] if
-				se.mouseHovering and not cacheEventStuff["mh"]
-			 then
-				se.mouseEnter:run(unpack(mousePosition))
+			if previously["bld"] and not self.mouseLDown and self.mouseLDownWithinThisComponent then
+				self.mouseButtonLClick:run(unpack(mousePosition))
 			end
-			if not se.mouseHovering and cacheEventStuff["mh"] then
-				se.mouseExit:run(unpack(mousePosition))
+			if previously["brd"] and not self.mouseRDown and self.mouseRDownWithinThisComponent then
+				self.mouseButtonRClick:run(unpack(mousePosition))
 			end
-			if se.mouseHovering and cacheEventStuff["mh"] and unpack(mousePosition) ~= unpack(mousePositionCache) then
-				se.mouseMove:run(unpack(mousePosition))
+			if self.mouseHovering and not previously["mh"] then
+				self.mouseEnter:run(unpack(mousePosition))
+			end
+			if not self.mouseHovering and previously["mh"] then
+				self.mouseExit:run(unpack(mousePosition))
+			end
+			if self.mouseHovering and previously["mh"] and unpack(mousePosition) ~= unpack(mousePositionCache) then
+				self.mouseMove:run(unpack(mousePosition))
 			end
 		end,
 		["sliderMoved"] = newEvent()
