@@ -18,18 +18,18 @@ It has recently been, thanks to a contribution by buckle2000, updated to support
 
 # Old README
 
-This is a GUI library for Love2D. It's very customizable and has literally tens of features.
+This is a GUI library for Love2D, aimed at being simple to set up and use.
 
 It has an event system similar to the one found at http://roblox.com, e.g. `Object.Event:connect(function)` to register an event handler
 
-It's really easy to use! Here's a basic example:
+Here's a basic example:
 
 ```lua
 require("Class.lua")
 require("GUIElements/GUIMain.lua")
 	
 function love.load()
-	ClickButton = Button:new()
+	ClickButton = TextButton:new()
 	ClickButton.text = "Move mouse on me and I will move to the left!"
 
 	--This changes its size to the text size, and also gives 2.5 pixels padding on all sides.
