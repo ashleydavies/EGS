@@ -29,7 +29,7 @@ require("Class.lua")
 require("GUIElements/GUIMain.lua")
 	
 function love.load()
-	Button:new("ClickButton")
+	ClickButton = Button:new()
 	ClickButton.text = "Move mouse on me and I will move to the left!"
 
 	--This changes its size to the text size, and also gives 2.5 pixels padding on all sides.
