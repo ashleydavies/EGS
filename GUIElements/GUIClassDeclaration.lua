@@ -26,19 +26,19 @@ Class("GUIElement") {
 		table.insert(GUIs, se)
 	end,
 	["visible"] = true,
-	["backgroundColor"] = {200, 100, 100},
+	["backgroundColor"] = {0.8, 0.5, 0.5, 1},
 	["shadingVisible"] = true,
 	["hoverShadingPercent"] = 10, --How dark (in percent - 0 is invisible, 100 is pitch black) the hover shading should be
 	["mouseDownShadingPercent"] = 30, --How dark in percent the mouse down shading should be. Applies to left button only.
 	["borderVisible"] = true,
-	["borderColor"] = {80, 200, 240},
+	["borderColor"] = {0.2, 0.7, 0.9, 1},
 	["borderWidth"] = 2,
 	["toolTipVisible"] = false,
 	["toolTipText"] = "toolTip",
 	["toolTipSeconds"] = 0.5, --Works same as mouseClickedSeconds.
 	["toolTipSeconds2"] = 0.5,
-	["toolTipBorderColor"] = {80, 200, 240},
-	["toolTipBackgroundColor"] = {100, 150, 100},
+	["toolTipBorderColor"] = {0.2, 0.9, 0.95, 1},
+	["toolTipBackgroundColor"] = {0.3, 0.6, 0.7, 1},
 	["size"] = {50, 20},
 	["position"] = {20, 20},
 	["mouseLDown"] = false,
@@ -66,77 +66,76 @@ Class("GUIElement") {
 	["gDrawFinal"] = function(se)
 		--toolTip
 		if se.toolTipVisible and se.toolTipSeconds <= 0 then
-			--dun dun dunnnn
 			local position = {mousePosition[1] + 20, mousePosition[2] + 20}
 			local size = {love.graphics.getFont():getWidth(se.toolTipText) + 6, love.graphics.getFont():getHeight() + 6}
-			love.graphics.setColor(se.toolTipBackgroundColor[1], se.toolTipBackgroundColor[2], se.toolTipBackgroundColor[3], 255)
+			love.graphics.setColor(unpack(se.toolTipBackgroundColor))
 			love.graphics.draw(GUIGraphics["spotImg"], position[1], position[2], 0, size[1], size[2])
-			love.graphics.setColor(se.toolTipBorderColor[1], se.toolTipBorderColor[2], se.toolTipBorderColor[3], 255)
+			love.graphics.setColor(unpack(se.toolTipBorderColor))
 			drawBorder(position[1], position[2], size[1], size[2], 2)
 			love.graphics.setColor(0, 0, 0, 255)
 			love.graphics.print(se.toolTipText, position[1] + 3, position[2] + 3)
 		end
 	end,
-	["gUpdate"] = function(se, Time)
+	["gUpdate"] = function(self, Time)
 		--Cache values for events
 		local cacheEventStuff = {
-			["bld"] = se.mouseLDown,
-			["brd"] = se.mouseRDown,
-			["mlcs"] = se.mouseLClickedSeconds,
-			["mrcs"] = se.mouseRClickedSeconds,
-			["mh"] = se.mouseHovering,
-			["tts"] = se.toolTipSeconds
+			["bld"] = self.mouseLDown,
+			["brd"] = self.mouseRDown,
+			["mlcs"] = self.mouseLClickedSeconds,
+			["mrcs"] = self.mouseRClickedSeconds,
+			["mh"] = self.mouseHovering,
+			["tts"] = self.toolTipSeconds
 		}
 		local elseWasExecuted = false
 		if
-			love.mouse.getX() > se.position[1] and love.mouse.getY() > se.position[2] and
-				love.mouse.getX() < se.position[1] + se.size[1] and
-				love.mouse.getY() < se.position[2] + se.size[2]
+			love.mouse.getX() > self.position[1] and love.mouse.getY() > self.position[2] and
+				love.mouse.getX() < self.position[1] + self.size[1] and
+				love.mouse.getY() < self.position[2] + self.size[2]
 		 then
-			se.mouseHovering = true
-			if se.toolTipSeconds > 0 then
-				se.toolTipSeconds = se.toolTipSeconds - Time
+			self.mouseHovering = true
+			if self.toolTipSeconds > 0 then
+				self.toolTipSeconds = self.toolTipSeconds - Time
 			end
 			if mouseLeft then
-				se.mouseLDown = true
-				if se.mouseLClickedSeconds > 0 then
-					se.mouseLClickedSeconds = se.mouseLClickedSeconds - Time
+				self.mouseLDown = true
+				if self.mouseLClickedSeconds > 0 then
+					self.mouseLClickedSeconds = self.mouseLClickedSeconds - Time
 				end
 			else
-				se.mouseLDown = false
-				se.mouseLClickedSeconds = se.mouseLClickedSeconds2
+				self.mouseLDown = false
+				self.mouseLClickedSeconds = self.mouseLClickedSeconds2
 			end
 			if mouseRight then
-				se.mouseRDown = true
-				if se.mouseRClickedSeconds > 0 then
-					se.mouseRClickedSeconds = se.mouseRClickedSeconds - Time
+				self.mouseRDown = true
+				if self.mouseRClickedSeconds > 0 then
+					self.mouseRClickedSeconds = self.mouseRClickedSeconds - Time
 				end
 			else
-				se.mouseRDown = false
-				se.mouseRClickedSeconds = se.mouseRClickedSeconds2
+				self.mouseRDown = false
+				self.mouseRClickedSeconds = self.mouseRClickedSeconds2
 			end
 		else
-			se.mouseHovering = false
-			se.mouseLDown = false
-			se.mouseRDown = false
+			self.mouseHovering = false
+			self.mouseLDown = false
+			self.mouseRDown = false
 			elseWasExecuted = true --This is to stop mlDown and mrDown firing event callbacks.
-			se.toolTipSeconds = se.toolTipSeconds2
-			se.mouseLClickedSeconds = se.mouseLClickedSeconds2
-			se.mouseRClickedSeconds = se.mouseRClickedSeconds2
+			self.toolTipSeconds = self.toolTipSeconds2
+			self.mouseLClickedSeconds = self.mouseLClickedSeconds2
+			self.mouseRClickedSeconds = self.mouseRClickedSeconds2
 		end
 
 		--Fire necessary events.
-		if not cacheEventStuff["bld"] and se.mouseLDown and not elseWasExecuted then
-			se.mouseButtonLDown:run(unpack(mousePosition))
+		if not cacheEventStuff["bld"] and self.mouseLDown and not elseWasExecuted then
+			self.mouseButtonLDown:run(unpack(mousePosition))
 		end
-		if not cacheEventStuff["brd"] and se.mouseRDown and not elseWasExecuted then
-			se.mouseButtonRDown:run(unpack(mousePosition))
+		if not cacheEventStuff["brd"] and self.mouseRDown and not elseWasExecuted then
+			self.mouseButtonRDown:run(unpack(mousePosition))
 		end
-		if cacheEventStuff["bld"] and not se.mouseLDown and not elseWasExecuted then
-			se.mouseButtonLUp:run(unpack(mousePosition))
+		if cacheEventStuff["bld"] and not self.mouseLDown and not elseWasExecuted then
+			self.mouseButtonLUp:run(unpack(mousePosition))
 		end
-		if cacheEventStuff["brd"] and not se.mouseRDown and not elseWasExecuted then
-			se.mouseButtonRUp:run(unpack(mousePosition))
+		if cacheEventStuff["brd"] and not self.mouseRDown and not elseWasExecuted then
+			self.mouseButtonRUp:run(unpack(mousePosition))
 		end
 		 --Old broken click code. Need to fix this. Shouldn't be too hard.
 		--[[
@@ -147,15 +146,15 @@ Class("GUIElement") {
 								se.mouseButtonRClick:run(unpack(mousePosition))
 							end
 							]] if
-			se.mouseHovering and not cacheEventStuff["mh"]
+			self.mouseHovering and not cacheEventStuff["mh"]
 		 then
-			se.mouseEnter:run(unpack(mousePosition))
+			self.mouseEnter:run(unpack(mousePosition))
 		end
-		if not se.mouseHovering and cacheEventStuff["mh"] then
-			se.mouseExit:run(unpack(mousePosition))
+		if not self.mouseHovering and cacheEventStuff["mh"] then
+			self.mouseExit:run(unpack(mousePosition))
 		end
-		if se.mouseHovering and cacheEventStuff["mh"] and unpack(mousePosition) ~= unpack(mousePositionCache) then
-			se.mouseMove:run(unpack(mousePosition))
+		if self.mouseHovering and cacheEventStuff["mh"] and unpack(mousePosition) ~= unpack(mousePositionCache) then
+			self.mouseMove:run(unpack(mousePosition))
 		end
 	end,
 	--Events

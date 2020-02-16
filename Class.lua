@@ -57,7 +57,6 @@ function Class(className)
 				end
 			end
 			newObject["className"] = className
-			newObject["name"] = nameArgs
 
 			if newObject["load"] ~= nil then
 				newObject:load()

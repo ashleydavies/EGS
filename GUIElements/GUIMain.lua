@@ -1,4 +1,4 @@
-require("GUIElements/GUIClassDecleration")
+require("GUIElements/GUIClassDeclaration")
 
 mouseLeft = love.mouse.isDown(1)
 mouseRight = love.mouse.isDown(2)
@@ -14,14 +14,14 @@ GUIGraphics = {
 
 GUIs = {}
 
-function GUIUpdate(Time)
+function GUIUpdate(time)
 	mouseLeft = love.mouse.isDown(1)
 	mouseRight = love.mouse.isDown(2)
 	mousePosition = {love.mouse.getX(), love.mouse.getY()}
 	for _, v in pairs(GUIs) do
-		v:gUpdate(Time) --Core updating function
+		v:gUpdate(time)
 		if v.update then
-			v:update(Time)
+			v:update(time)
 		end
 	end
 	mouseLeftCache = love.mouse.isDown(1)
@@ -74,7 +74,7 @@ end
 ---bH: box height
 ---transparency: number between 0 and 100. 100 is fully invisible and 0 is fully visible.
 function drawShading(bX, bY, bW, bH, transparency)
-	love.graphics.setColor(0, 0, 0, (255 / 100) * transparency)
+	love.graphics.setColor(0, 0, 0, 0.01 * transparency)
 	love.graphics.draw(GUIGraphics["spotImg"], bX, bY, 0, bW, bH)
 end
 

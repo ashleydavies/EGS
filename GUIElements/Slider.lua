@@ -8,13 +8,13 @@ Class("Slider")(
 		["mouseDownShadingPercent"] = 30,
 		["slots"] = 10, --How many slots for the slideRectangle to fit into.
 		["slotsVisible"] = true, --Do the slots display?
-		["slotsColor"] = {100, 150, 100},
+		["slotsColor"] = {0.4, 0.5, 0.4, 1},
 		["slotsSize"] = {2, 5}, --How big are the slots drawn?
 		["slotsOnBar"] = false, --If true the slots appear centered on the bar rather than below.
 		["slideRectangleSize"] = {4, 10},
 		["slideRectanglePosition"] = 1, --Measured in slots not pixels.
-		["slideRectangleBorderColor"] = {80, 200, 240},
-		["slideRectangleBackgroundColor"] = {100, 150, 100},
+		["slideRectangleBorderColor"] = {0.3, 0.8, 0.9, 1},
+		["slideRectangleBackgroundColor"] = {0.4, 0.5, 0.4, 1},
 		["slideRectangleBorderWidth"] = 2,
 		["sliderBarHeight"] = 1, --How tall the bar the slider sits on is.
 		--Overwride gDraw and gUpdate.

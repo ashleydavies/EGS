@@ -10,16 +10,20 @@ Class("TextButton")(
 		["textFittingMinimumPadding"] = 0, --How much padding on either side for textFitting to be true. It must have this much gap between it and the border.
 		["textFitting"] = false, --False if the text doesn't fit inside the box. If it's true the text is fitting in the box.
 		["draw"] = function(s, Args)
-			love.graphics.setColor(0, 0, 0, 255)
+			love.graphics.setColor(0, 0, 0, 1)
 			local centrePosition = {s.position[1] + s.size[1] / 2, s.position[2] + s.size[2] / 2}
 			love.graphics.print(
 				s.text,
-				centrePosition[1] - love.graphics.getFont():getWidth(s.text) / 2,
-				centrePosition[2] - love.graphics.getFont():getHeight() / 2
+				math.floor(centrePosition[1] - love.graphics.getFont():getWidth(s.text) / 2),
+				math.floor(centrePosition[2] - love.graphics.getFont():getHeight() / 2)
 			)
 		end,
+		["resizeToText"] = function(s)
+			s.size[1] = math.ceil(love.graphics.getFont():getWidth(s.text) + s.textFittingMinimumPadding)
+			s.size[2] = math.ceil(love.graphics.getFont():getHeight(s.text) + s.textFittingMinimumPadding)
+		end,
 		["update"] = function(s)
-			--Ok is all we need to do is check if textFitting is true.
+			-- All we need to do is check if textFitting is true.
 			if love.graphics.getFont():getWidth(s.text) < s.size[1] - s.textFittingMinimumPadding * 2 then
 				if not s.textFitting then
 					s.textFitting = true
