@@ -46,25 +46,33 @@ function Class(className)
 		end
 
 		returnTable.new = function(s, nameArgs)
-			local rT = {} --returnTable
+			local newObject = {}
 			for _, v in pairs(returnTable.Properties) do
 				if type(_) == "number" then --Allows for default values.
-					rT[v] = ""
+					newObject[v] = ""
 				elseif type(v) == "table" then
-					rT[_] = CloneTable(v)
+					newObject[_] = CloneTable(v)
 				else
-					rT[_] = v
+					newObject[_] = v
 				end
 			end
-			rT["className"] = className
-			rT["name"] = nameArgs
+			newObject["className"] = className
+			newObject["name"] = nameArgs
 
-			if rT["load"] ~= nil then
-				rT:load()
+			if newObject["load"] ~= nil then
+				newObject:load()
 			end
-			getfenv(2)[nameArgs] = rT
+			if nameArgs == "" or nameArgs == nil then
+				return newObject
+			end
+			-- If they passed a name, create it in their local function scope
+			getfenv(2)[nameArgs] = newObject
 		end
 
+		if className == "" or className == nil then
+			return returnTable
+		end
+		-- If they passed a name, create it in their local function scope
 		getfenv(2)[className] = returnTable
 	end
 end
