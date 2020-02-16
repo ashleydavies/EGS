@@ -1,17 +1,12 @@
 require("Class")
 require("GUIElements/GUIMain")
 
---------------NOTE
-
------This project (GUIUI/ and GUIElements/) uses lpglv2 open source license. Just give me credit, please. 
------Trappingnoobs
-
 function giveTheme(element)
 	element.backgroundColor = {math.random(1,255),math.random(1,255),math.random(1,255)}
 	element.borderColor = {math.random(1,255),math.random(1,255),math.random(1,255)}
 	element.toolTipVisible = true
 	element.toolTipText = element.className..": "..element.name
-	--Check out 'GUIClassDecleration.lua' for more GUI properties. They've got tens of properties!
+	--Check out 'GUIClassDecleration.lua' for more GUI properties. They've got a lot more properties!
 end
 
 function love.load()
