@@ -44,10 +44,6 @@ Class("GUIElement") {
 	["mouseLDown"] = false,
 	["mouseRDown"] = false,
 	["mouseHovering"] = false,
-	["mouseLClickedSeconds"] = 0.5, --If they press the mouse button then release it within this amount of time, it will count as a Click.
-	["mouseLClickedSeconds2"] = 0.5, --Same as above, but this is so the script remembers what to reset it to once it reaches 0.
-	["mouseRClickedSeconds"] = 0.5,
-	["mouseRClickedSeconds2"] = 0.5,
 	["gDraw"] = function(se) --Default GUI draw function. Some elements override this function but it should be used in most.
 		love.graphics.setColor(unpack(se.backgroundColor))
 		love.graphics.draw(GUIGraphics["spotImg"], se.position[1], se.position[2], 0, se.size[1], se.size[2])
@@ -78,7 +74,7 @@ Class("GUIElement") {
 	end,
 	["gUpdate"] = function(self, Time)
 		--Cache values for events
-		local cacheEventStuff = {
+		local previously = {
 			["bld"] = self.mouseLDown,
 			["brd"] = self.mouseRDown,
 			["mlcs"] = self.mouseLClickedSeconds,
@@ -86,74 +82,68 @@ Class("GUIElement") {
 			["mh"] = self.mouseHovering,
 			["tts"] = self.toolTipSeconds
 		}
-		local elseWasExecuted = false
-		if
+
+		local mouseWithinComponent =
 			love.mouse.getX() > self.position[1] and love.mouse.getY() > self.position[2] and
-				love.mouse.getX() < self.position[1] + self.size[1] and
-				love.mouse.getY() < self.position[2] + self.size[2]
-		 then
+			love.mouse.getX() < self.position[1] + self.size[1] and
+			love.mouse.getY() < self.position[2] + self.size[2]
+
+		if mouseWithinComponent then
 			self.mouseHovering = true
 			if self.toolTipSeconds > 0 then
 				self.toolTipSeconds = self.toolTipSeconds - Time
 			end
 			if mouseLeft then
 				self.mouseLDown = true
-				if self.mouseLClickedSeconds > 0 then
-					self.mouseLClickedSeconds = self.mouseLClickedSeconds - Time
+				if not mouseLeftCache then
+					self.mouseLDownWithinThisComponent = true
 				end
 			else
 				self.mouseLDown = false
-				self.mouseLClickedSeconds = self.mouseLClickedSeconds2
 			end
 			if mouseRight then
 				self.mouseRDown = true
-				if self.mouseRClickedSeconds > 0 then
-					self.mouseRClickedSeconds = self.mouseRClickedSeconds - Time
+				if not mouseRightCache then
+					self.mouseRDownWithinThisComponent = true
 				end
 			else
 				self.mouseRDown = false
-				self.mouseRClickedSeconds = self.mouseRClickedSeconds2
 			end
 		else
 			self.mouseHovering = false
 			self.mouseLDown = false
 			self.mouseRDown = false
-			elseWasExecuted = true --This is to stop mlDown and mrDown firing event callbacks.
 			self.toolTipSeconds = self.toolTipSeconds2
-			self.mouseLClickedSeconds = self.mouseLClickedSeconds2
-			self.mouseRClickedSeconds = self.mouseRClickedSeconds2
+			self.mouseLDownWithinThisComponent = false
+			self.mouseRDownWithinThisComponent = false
 		end
 
 		--Fire necessary events.
-		if not cacheEventStuff["bld"] and self.mouseLDown and not elseWasExecuted then
+		if not previously["bld"] and self.mouseLDown and not mouseLeftCache then
 			self.mouseButtonLDown:run(unpack(mousePosition))
 		end
-		if not cacheEventStuff["brd"] and self.mouseRDown and not elseWasExecuted then
+		if not previously["brd"] and self.mouseRDown and not mouseRightCache then
 			self.mouseButtonRDown:run(unpack(mousePosition))
 		end
-		if cacheEventStuff["bld"] and not self.mouseLDown and not elseWasExecuted then
+		if previously["bld"] and not self.mouseLDown then
 			self.mouseButtonLUp:run(unpack(mousePosition))
 		end
-		if cacheEventStuff["brd"] and not self.mouseRDown and not elseWasExecuted then
+		if previously["brd"] and not self.mouseRDown then
 			self.mouseButtonRUp:run(unpack(mousePosition))
 		end
-		 --Old broken click code. Need to fix this. Shouldn't be too hard.
-		--[[
-							if se.mouseLClickedSeconds > 0 and cacheEventStuff["bld"] and not se.mouseLDown and not elseWasExecuted then
-								se.mouseButtonLClick:run(unpack(mousePosition))
-							end
-							if se.mouseRClickedSeconds > 0 and cacheEventStuff["bld"] and not se.mouseLDown and not elseWasExecuted then
-								se.mouseButtonRClick:run(unpack(mousePosition))
-							end
-							]] if
-			self.mouseHovering and not cacheEventStuff["mh"]
-		 then
+		if previously["bld"] and not self.mouseLDown and self.mouseLDownWithinThisComponent then
+			self.mouseButtonLClick:run(unpack(mousePosition))
+		end
+		if previously["brd"] and not self.mouseRDown and self.mouseRDownWithinThisComponent then
+			self.mouseButtonRClick:run(unpack(mousePosition))
+		end
+		if self.mouseHovering and not previously["mh"] then
 			self.mouseEnter:run(unpack(mousePosition))
 		end
-		if not self.mouseHovering and cacheEventStuff["mh"] then
+		if not self.mouseHovering and previously["mh"] then
 			self.mouseExit:run(unpack(mousePosition))
 		end
-		if self.mouseHovering and cacheEventStuff["mh"] and unpack(mousePosition) ~= unpack(mousePositionCache) then
+		if self.mouseHovering and previously["mh"] and unpack(mousePosition) ~= unpack(mousePositionCache) then
 			self.mouseMove:run(unpack(mousePosition))
 		end
 	end,
