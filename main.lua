@@ -19,7 +19,7 @@ function constructButton(text, position)
 end
 
 function love.load()
-	love.graphics.setFont(love.graphics.setNewFont(10))
+	love.graphics.setFont(love.graphics.setNewFont(12))
 	love.graphics.setBackgroundColor(1, 1, 1)
 	
 	GE1 = GUIElement:new()

@@ -6,11 +6,11 @@ Class("Slider")(
 		["clickedOn"] = false,
 		["hoverShadingPercent"] = 20, --Better to have a darker shading because it's harder to see on a slider
 		["mouseDownShadingPercent"] = 30,
-		["slots"] = 10, --How many slots for the slideRectangle to fit into.
+		["slots"] = 6, --How many slots for the slideRectangle to fit into.
 		["slotsVisible"] = true, --Do the slots display?
 		["slotsColor"] = {0.4, 0.5, 0.4, 1},
 		["slotsSize"] = {2, 5}, --How big are the slots drawn?
-		["slotsOnBar"] = false, --If true the slots appear centered on the bar rather than below.
+		["slotsOnBar"] = true, --If true the slots appear centered on the bar rather than below.
 		["slideRectangleSize"] = {4, 10},
 		["slideRectanglePosition"] = 1, --Measured in slots not pixels.
 		["slideRectangleBorderColor"] = {0.3, 0.8, 0.9, 1},
