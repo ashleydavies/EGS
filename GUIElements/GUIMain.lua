@@ -31,6 +31,10 @@ end
 
 function GUIDraw()
 	local pr, pg, pb, al = love.graphics.getColor()
+
+	-- TODO: This is pretty inefficient to do every frame for larger numbers of GUI; we should fix this
+	table.sort(GUIs, function(k1, k2) return k1.zIndex < k2.zIndex end)
+
 	for _, v in pairs(GUIs) do
 		v:gDraw()
 		if v.draw then

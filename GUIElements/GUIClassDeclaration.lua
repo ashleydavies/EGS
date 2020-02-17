@@ -44,6 +44,7 @@ Class("GUIElement") {
 	["mouseLDown"] = false,
 	["mouseRDown"] = false,
 	["mouseHovering"] = false,
+	["zIndex"] = 0,
 	["gDraw"] = function(se) --Default GUI draw function. Some elements override this function but it should be used in most.
 		love.graphics.setColor(unpack(se.backgroundColor))
 		love.graphics.draw(GUIGraphics["spotImg"], se.position[1], se.position[2], 0, se.size[1], se.size[2])
@@ -72,7 +73,7 @@ Class("GUIElement") {
 			love.graphics.print(se.toolTipText, position[1] + 3, position[2] + 3)
 		end
 	end,
-	["gUpdate"] = function(self, Time)
+	["gUpdate"] = function(self, dt)
 		--Cache values for events
 		local previously = {
 			["bld"] = self.mouseLDown,
@@ -91,7 +92,7 @@ Class("GUIElement") {
 		if mouseWithinComponent then
 			self.mouseHovering = true
 			if self.toolTipSeconds > 0 then
-				self.toolTipSeconds = self.toolTipSeconds - Time
+				self.toolTipSeconds = self.toolTipSeconds - dt
 			end
 			if mouseLeft then
 				self.mouseLDown = true

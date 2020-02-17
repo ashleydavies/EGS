@@ -37,11 +37,20 @@ function love.load()
 	TB1.position = {12 + 64 + 32 + 10 + 10, 12}
 	TB1.text = "This is a TextButton! It'll resize until textFitting is true!"
 	giveTheme(TB1)
-	
+
 	SL1 = Slider:new()
 	SL1.position = {12, 12 + 32 + 10}
 	SL1.size = {128, 32}
 	giveTheme(SL1)
+
+	buttonBack = constructButton("Back", {500, 500})
+	buttonFront = constructButton("Front", {530, 530})
+	buttonMiddle = constructButton("Middle", {515, 515})
+	buttonFurtherBack = constructButton("Back", {540, 505})
+
+	buttonMiddle.zIndex = 5
+	buttonFront.zIndex = 10
+	buttonFurtherBack.zIndex = -1
 
 	button1 = constructButton("Hello World", {300, 300})
 	giveTheme(button1)
